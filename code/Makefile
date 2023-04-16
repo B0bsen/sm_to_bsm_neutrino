@@ -1,52 +1,61 @@
 # variables
-## global
-OS := $(shell uname)
-OBJ := obj/main.o
+## Directories
+LIBDIR:=lib
+INCDIR:=include
+SQINCDIR:=include/SQuIDS
+SRCDIR:=src
+INSTALL_LIBDIR:=lib
+PATH_SQUIDS:=$(HOME)/Libraries/SQuIDS
 
-## macOS specific
-MAC_CFLAGS := -Ofast -std=c++11
-MAC_LFLAGS := -lgsl -lgslcblas
+## Compiler
+CC:=gcc
+CXX:=g++
+AR:=ar
+LD:=g++
 
-## linux specific
-LX_IPATH := -I/home/dhellmann/Libraries/gsl/include
-LX_LPATH := -L/home/dhellmann/Libraries/gsl/lib
-LX_LIBS := -lgsl -lgslcblas -lm
-LX_CFLAGS := -pthread -Ofast -std=c++11
-LX_LFLAGS := -pthread -fno-builtin $(LX_LIBS)
+## Flags
+### Compiler
+GSL_CFLAGS=-I/opt/homebrew/Cellar/gsl/2.7.1/include
 
-# linking
-app/main: app $(OBJ)
-ifeq ($(OS),Darwin)
-	@echo Linking...
-	@g++ -o app/main $(OBJ) $(MAC_LFLAGS)
-else ifeq ($(OS),Linux)
-	@echo Linking...
-	@g++ $(LX_LPATH) -o app/main $(OBJ) $(LX_LFLAGS)
-endif
+CFLAGS:= -O3 -fPIC -I$(INCDIR) $(GSL_CFLAGS)
 
-# compilation
-obj/main.o: obj src/main.cpp
-ifeq ($(OS), Darwin)
-	@echo Compiling...
-	@g++ -c -o obj/main.o src/main.cpp $(MAC_CFLAGS)
-else ifeq ($(OS),Linux)
-	@echo Compiling...
-	@g++ $(LX_IPATH) -c -o obj/main.o src/main.cpp $(LX_CFLAGS)
-endif
+CXXFLAGS:= -std=c++11
+CXXFLAGS+=-I$(PATH_SQUIDS)/$(INCDIR)
 
-# necessary folders
-app:
-	@mkdir app
+### Linker
+GSL_LDFLAGS=-L/opt/homebrew/Cellar/gsl/2.7.1/lib -lgsl -lgslcblas -lm
+
+LDFLAGS:= -Wl,-rpath -Wl,$(LIBDIR) $(GSL_LDFLAGS)
+LDFLAGS+= -Wl,-rpath -Wl,$(PATH_SQUIDS)/$(LIBDIR) -L$(PATH_SQUIDS)/$(LIBDIR) -lSQuIDS $(GSL_LDFLAGS)
+
+## main target name
+EXE=app/vacuum
+
+# Compilation rules
+all: $(EXE)
+
+obj/vacuum.o: obj src/vacuum.cpp src/vacuum.h
+	$(CXX) -c $(CXXFLAGS) $(CFLAGS) -o obj/vacuum.o src/vacuum.cpp
+
+obj/main.o: obj src/main.cpp src/vacuum.h
+	$(CXX) -c $(CXXFLAGS) $(CFLAGS) -o obj/main.o src/main.cpp
+
+$(EXE): app obj/main.o obj/vacuum.o
+	$(CXX) $(CXXFLAGS) $(CFLAGS) obj/main.o obj/vacuum.o $(LDFLAGS)  -o $(EXE)
+
+exe:
+	$(EXE)
 
 obj:
-	@mkdir obj
+	mkdir obj
 
-# phony targets
-exe: app/main
-	@./app/main
+app:
+	mkdir app
 
 clean:
-	@echo Deleting reproducable files...
-	@rm -rf app obj
+	rm -rf app obj
 
-.PHNOY: exe clean
+.PHONY: clean exe
+
+# DYN_SUFFIX:=.dylib
+# DYN_OPT=-dynamiclib -compatibility_version $(VERSION) -current_version $(VERSION)
