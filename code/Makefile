@@ -15,7 +15,7 @@ LD:=g++
 
 ## Flags
 ### Compiler
-GSL_CFLAGS=-I/opt/homebrew/Cellar/gsl/2.7.1/include
+GSL_CFLAGS=-I$(HOME)/Libraries/gsl/2.7.1/include
 
 CFLAGS:= -O3 -fPIC -I$(INCDIR) $(GSL_CFLAGS)
 
@@ -23,7 +23,7 @@ CXXFLAGS:= -std=c++11
 CXXFLAGS+=-I$(PATH_SQUIDS)/$(INCDIR)
 
 ### Linker
-GSL_LDFLAGS=-L/opt/homebrew/Cellar/gsl/2.7.1/lib -lgsl -lgslcblas -lm
+GSL_LDFLAGS=-L$(HOME)/Libraries/gsl/2.7.1/lib -lgsl -lgslcblas -lm
 
 LDFLAGS:= -Wl,-rpath -Wl,$(LIBDIR) $(GSL_LDFLAGS)
 LDFLAGS+= -Wl,-rpath -Wl,$(PATH_SQUIDS)/$(LIBDIR) -L$(PATH_SQUIDS)/$(LIBDIR) -lSQuIDS $(GSL_LDFLAGS)
