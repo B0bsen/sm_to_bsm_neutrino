@@ -32,7 +32,7 @@ LDFLAGS+= -Wl,-rpath -Wl,$(PATH_SQUIDS)/$(LIBDIR) -L$(PATH_SQUIDS)/$(LIBDIR) -lS
 EXE=app/vacuum
 
 # Compilation rules
-all: $(EXE)
+all: $(EXE) data
 
 obj/vacuum.o: obj src/vacuum.cpp src/vacuum.h
 	$(CXX) -c $(CXXFLAGS) $(CFLAGS) -o obj/vacuum.o src/vacuum.cpp
@@ -43,11 +43,14 @@ obj/main.o: obj src/main.cpp src/vacuum.h
 $(EXE): app obj/main.o obj/vacuum.o
 	$(CXX) $(CXXFLAGS) $(CFLAGS) obj/main.o obj/vacuum.o $(LDFLAGS)  -o $(EXE)
 
-exe:
-	$(EXE)
+data:
+	mkdir data
 
 obj:
 	mkdir obj
+
+exe:
+	$(EXE)
 
 app:
 	mkdir app
@@ -56,6 +59,3 @@ clean:
 	rm -rf app obj
 
 .PHONY: clean exe
-
-# DYN_SUFFIX:=.dylib
-# DYN_OPT=-dynamiclib -compatibility_version $(VERSION) -current_version $(VERSION)
