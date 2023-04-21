@@ -1,0 +1,180 @@
+% settings for the colorschemes
+\DeclareOptionBeamer{color}{\def\beamer@colorDortmund{#1}}
+\ProcessOptionsBeamer
+\def\beamer@colorDortmundGreen{green}
+\def\beamer@colorDortmundGreyOrange{greyorange}
+
+
+\mode<presentation>
+
+\definecolor{apple}{HTML}{cc0000}
+
+% set colors
+
+\ifx\beamer@colorDortmund\beamer@colorDortmundGreen%
+% dark green colorscheme
+	\definecolor{beamer@blendedrgb}{HTML}{cc0000}
+	\setbeamercolor{section in toc}{fg=black}%
+	\setbeamercolor{subsection in toc}{fg=black}%
+	\setbeamercolor{block title}{parent=palette primary,fg=white!85!black!25!}%
+	\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!10!bg}%
+	\setbeamercolor{fine separation line}{use=structure,fg=white,bg=black!50!green}%
+	\setbeamercolor{section in head/foot block}{fg=white, bg=black!50!green}%
+	\setbeamercolor{sectiontitle}{fg=red!10!green!10!blue!10!, bg=red!33!blue!33!green}%
+	\setbeamercolor{highlight}{fg=beamer@blendedrgb, bg=normal text.bg}
+\else%
+		\ifx\beamer@colorDortmund\beamer@colorDortmundGreyOrange%
+% shortlived grey-orange colorscheme as seen on uni-dortmund.de in November 2007 till February 2008 (which was
+			\definecolor{beamer@blendedrgb}{HTML}{cc0000}%
+			\setbeamercolor{section in toc}{fg=black}%
+			\setbeamercolor{subsection in toc}{fg=black}%
+			\setbeamercolor{block title}{parent=palette primary}%
+			\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!5!bg}%
+			\setbeamercolor{fine separation line}{use=structure,fg=white,bg=black}%
+			\setbeamercolor{sectiontitle}{fg=white,bg=beamer@blendedrgb}%
+			\setbeamercolor{section in head/foot block}{fg=white,bg=black}%
+		\fi%
+\fi%
+
+% identical for all colorschemes
+\setbeamercolor{structure}{fg=beamer@blendedrgb}%
+\setbeamercolor{normal text}{fg=black,bg=white}%
+\setbeamercolor{palette primary}{use=structure, fg=white, bg=structure.fg}%
+\setbeamercolor{palette secondary}{use=structure,fg=white,bg=structure.fg!75!black}%
+\setbeamercolor{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}%
+\setbeamercolor{palette quaternary}{fg=white,bg=black}%
+\setbeamercolor{title in head/foot}{fg=black, bg=white}%
+\setbeamercolor{section in head/foot}{fg=normal text.fg, use=block title, bg=normal text.bg}%
+\setbeamercolor{subsection in head/foot}{fg=white,bg=structure.fg}%
+\setbeamercolor{testing}{fg=red, bg=blue}
+
+
+
+\setbeamersize{text margin left=0.5cm,text margin right=0.5cm}
+
+\setbeamertemplate{blocks}[rounded][shadow=true]
+
+% settings for table of contents
+\setbeamertemplate{section in toc}[circle]
+\setbeamertemplate{subsection in toc}[circle]
+
+% don't use navigation symbols
+\defbeamertemplate*{navigation symbols}{}
+
+% footline
+\defbeamertemplate*{footline}{infolines theme}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.28\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}Dominik Hellmann\expandafter\beamer@ifempty\expandafter{\beamer@shortinstitute}{}{~~(TU Dortmund)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.44\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}From SM to BSM - 2023
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.28\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+
+% headline
+\defbeamertemplate*{headline}{}{%
+	\leavevmode%
+	\vskip0.02\paperwidth
+	\hbox{%
+		\hskip0.02\paperwidth
+		\begin{beamercolorbox}[wd=0.45\paperwidth,ht=8ex,dp=1ex, left]{section in head/foot}%
+			\insertlogo{\includegraphics[height=7ex]{tud_logo_cmyk.pdf}}
+                       %\mbox{\large TU Dortmund}
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=0.45\paperwidth,ht=10ex,dp=1ex, center]{section in head/foot}%
+			\textcolor{beamer@blendedrgb}{\large \textbf{\insertsection}}
+		\end{beamercolorbox}%
+
+
+	}%
+	\vskip2pt%
+	\hbox{
+		\hskip0.02\paperwidth
+		\begin{beamercolorbox}[wd=0.96\paperwidth,ht=1pt, left]{palette quaternary}%
+		\end{beamercolorbox}%
+		\hskip0.02\paperwidth
+	}
+
+	%\hbox{%
+	%	\begin{beamercolorbox}[wd=1.0\paperwidth,ht=5ex,dp=1ex,left]{section in head/foot}%
+	%		\begin{beamercolorbox}[wd=0.02\paperwidth,ht=5ex,dp=1ex,left]{section in head/foot block}%
+	%		\end{beamercolorbox}%
+	%		\usebeamerfont{section in head/foot}\large \hskip3pt \insertsectionhead%
+	%	\end{beamercolorbox}%
+	%}
+	%\vskip0pt%
+	%\hbox{%
+	%	\begin{beamercolorbox}[wd=1.0\paperwidth,ht=2pt,]{section in head/foot}%
+	%		\begin{beamercolorbox}[wd=0.02\paperwidth,ht=2pt]{section in head/foot block}%
+	%		\end{beamercolorbox}%
+	%	\end{beamercolorbox}%
+	%}%
+	%\vskip0pt%
+	%\hbox{%
+	%	\begin{beamercolorbox}[wd=1.0\paperwidth,ht=2ex,dp=1ex,left]{section in head/foot}%
+	%		%\begin{beamercolorbox}[wd=0.02\paperwidth,ht=2ex,dp=1ex,left]{section in head/foot block}%
+	%		%\end{beamercolorbox}%
+	%		\usebeamerfont{section in head/foot}\normalsize \hskip15pt \insertsubsectionhead%
+	%	\end{beamercolorbox}%
+	%}%
+}
+
+% section-title
+\newcommand{\sectiontitle}[1]{%
+	\begin{beamerboxesrounded}[lower=sectiontitle,shadow=true]{}%
+		\begin{center}%
+			\LARGE{\textbf{#1}}%
+		\end{center}%
+	\end{beamerboxesrounded}%
+}
+
+% colorbar with round corners
+\newcommand{\colorbarround}[1]{
+	\begin{beamerboxesrounded}[lower=block title,shadow=true]{}%
+		#1%
+	\end{beamerboxesrounded}%
+}
+
+% colorbar with round corners (centered text)
+\newcommand{\colorbarroundc}[1]{
+	\begin{beamerboxesrounded}[lower=block title,shadow=true]{}%
+		\begin{center}%
+			#1%
+		\end{center}%
+	\end{beamerboxesrounded}%
+}
+
+% simple textblock
+\newcommand{\simpleblock}[2]{%
+	{\large #1}\\%
+	#2%
+}
+
+% literature
+\newcommand{\literature}[3]{%
+	\footnotesize{#1: {\color{beamer@blendedrgb}#2}} \\%
+	\begin{tiny} #3 \end{tiny}%
+}
+
+% colorbox (start)
+\newcommand{\boxstart}{%
+	\begin{beamercolorbox}[shadow=false,rounded=false,sep=5pt]{block body}%
+}
+
+% colorbox (end)
+\newcommand{\boxend}{%
+	\end{beamercolorbox}%
+}
+
+
+\mode
+<all>

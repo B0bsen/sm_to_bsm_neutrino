@@ -1,0 +1,205 @@
+\documentclass[]{beamer}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[percent]{overpic}
+\usepackage{xcolor}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{amsmath}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage[english]{babel}
+
+\usepackage{graphicx}
+\usepackage{paralist}
+\usepackage{setspace}
+\usepackage{amsfonts}
+\usepackage[labelfont=bf]{caption}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{color,array}
+\usepackage{colortbl}
+\usepackage{lscape}
+\usepackage{url}
+\usepackage{centernot}
+\newcommand{\fsl}[1]{{\centernot{#1}}}
+\newcommand{\defgl}{\mathrel{=\!\!\mathop:}}
+\newcommand{\defgr}{\mathrel{\mathop:\!\!=}}
+\def\SM{{\rm SM}}
+\def\NP{{\rm NP}}
+\def\ubar{\overline{u}}
+\def\dbar{\overline{d}}
+\def\sbar{\overline{s}}
+\def\cbar{\overline{c}}
+\def\bbar{\overline{b}}
+\def\tbar{\overline{t}}
+\def\qbar{\overline{q}}
+\def\lbar{\overline{\ell}}
+\def\ebar{\overline{e}}
+\def\mubar{\overline{\mu}}
+\def\nubar{\overline{\nu}}
+\def\Qbar{\overline{Q}}
+\def\Lbar{\overline{L}}
+\def\ml{{{m_\ell}}}
+\def\Babar{{\mbox{\slshape B\kern-0.1em{\smaller A}\kern-0.1em B\kern-0.1em{\smaller A\kern-0.2em R}}}}
+
+\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\nn}{\nonumber}
+
+
+\definecolor{tugreen}{HTML}{990000}
+\definecolor{tugrey}{HTML}{990000}
+\definecolor{tured}{HTML}{990000}
+\setbeamercolor{palette compare}{bg=white!80!tugreen,fg=black}
+\setbeamercolor{palette misc}{bg=white!80!tugreen,fg=black}
+\setbeamercolor{palette white}{bg=white!99!black,fg=black}
+
+
+\makeatletter
+\renewcommand{\itemize}[1][]{%
+  \beamer@ifempty{#1}{}{\def\beamer@defaultospec{#1}}%
+  \ifnum \@itemdepth >2\relax\@toodeep\else
+    \advance\@itemdepth\@ne
+    \beamer@computepref\@itemdepth% sets \beameritemnestingprefix
+    \usebeamerfont{itemize/enumerate \beameritemnestingprefix body}%
+    \usebeamercolor[fg]{itemize/enumerate \beameritemnestingprefix body}%
+    \usebeamertemplate{itemize/enumerate \beameritemnestingprefix body begin}%
+    \list
+      {\usebeamertemplate{itemize \beameritemnestingprefix item}}
+      {\setlength\itemsep{0.7em}% NEW
+        \def\makelabel##1{%
+          {%
+            \hss\llap{{%
+                \usebeamerfont*{itemize \beameritemnestingprefix item}%
+                \usebeamercolor[fg]{itemize \beameritemnestingprefix item}##1}}%
+          }%
+        }%
+      }
+  \fi%
+  \beamer@cramped%
+  \raggedright%
+  \beamer@firstlineitemizeunskip%
+}
+\makeatother
+
+\newcommand{\backupbegin}{
+	\newcounter{finalframe}
+	\setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+	\setcounter{framenumber}{\value{finalframe}}
+}
+
+
+\mode<presentation>
+{ \usetheme[color=green]{TU_Dortmund}
+}
+
+
+
+\title{\Large SQuIDS: A Tool to Solve Time Evolution in finite dimensional (open) Quantum Systems\\\vspace*{0.5cm}{\small An Application to Neutrino Oscillations\\\href{https://arxiv.org/abs/1412.3832.pdf}{arxiv:1412.3832}}}
+\author{Dominik Hellmann}
+\institute[TU Dortmund]{\scriptsize TU Dortmund\\WG Päs
+}
+
+\date{May 3, 2023}
+
+\begin{document}
+\nocite{*}
+
+
+\frame{\titlepage}
+
+\frame{\tableofcontents}
+
+\section{Introduction}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\section{Installation}
+
+\begin{frame}{Clone the Repo!}
+  Git Repository inlcuding all needed files:
+  \begin{block}{Instructions}
+    \texttt{cd} to the location where to place the repo \\
+    \texttt{git clone git@github:path/to/repo.git} \\
+    \texttt{cd repo}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Prerequisites}
+  What do we need for this tutorial?
+  \begin{itemize}
+    \item A unix-like (sub-)system 
+    \begin{itemize}
+      \item Linux
+      \item Mac (+ Xcode developer tools!)
+      \item On Windows: WSL
+    \end{itemize}
+    \item A C++ compiler
+    \item Make, wget, Git
+  \end{itemize}
+  Use scripts \texttt{install\_gsl.sh} and \texttt{install\_SQuIDS.sh} from the repo!
+\end{frame}
+
+\section{Exercises}
+
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\begin{frame}{}
+  
+\end{frame}
+
+\appendix
+
+\section{Backup}
+\backupbegin
+
+\begin{frame}
+    \centering \Huge BACK UP
+\end{frame}
+
+\backupend
+
+\end{document}
