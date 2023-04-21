@@ -29,7 +29,7 @@ LDFLAGS:= -Wl,-rpath -Wl,$(LIBDIR) $(GSL_LDFLAGS)
 LDFLAGS+= -Wl,-rpath -Wl,$(PATH_SQUIDS)/$(LIBDIR) -L$(PATH_SQUIDS)/$(LIBDIR) -lSQuIDS $(GSL_LDFLAGS)
 
 ## main target name
-EXE=app/vacuum
+EXE=app/vacuum.exe
 
 # Compilation rules
 all: $(EXE) data
