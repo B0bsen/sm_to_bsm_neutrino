@@ -25,8 +25,8 @@ int main()
     for(double logE = log(Emin); logE < log(Emax); logE += 0.0001)
     {
         double E = exp(logE);
-        file << E / units.GeV << "  " << V0.Get_flux(nu_e, E) << "  " <<
-            V0.Get_flux(nu_mu, E) << "  " << V0.Get_flux(nu_tau, E) << std::endl;
+        file << E / units.GeV << "\t" << V0.Get_flux(nu_e, E) << "\t" <<
+            V0.Get_flux(nu_mu, E) << "\t" << V0.Get_flux(nu_tau, E) << std::endl;
     }
     
     file.close();
