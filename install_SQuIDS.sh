@@ -5,7 +5,7 @@ cd ~/
 mkdir -p smToBsmLibs/SQuIDS
 
 # download SQuIDS
-git clone git@github.com:jsalvado/SQuIDS.git
+git clone https://github.com/jsalvado/SQuIDS.git
 
 # configure SQuIDS
 cd $(find SQuIDS* | head -n 1)

@@ -17,6 +17,10 @@ make
 make check
 make install
 
+# necessary under linux
+LD_LIBRARY_PATH=$HOME/smToBsmLibs/gsl/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+
 # remove all remaining junk directories
 cd ~/
 rm -rf $(find gsl-*/ | head -n 1)
