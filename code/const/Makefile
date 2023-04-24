@@ -20,7 +20,7 @@ app:
 
 # compilation
 obj/const.o: obj src/const.cpp
-	$(CXX) -c $(CFLAGS) -o obj/const.o src/const.cpp
+	$(CXX) -c $(CFLAGS) -o obj/const.o src/const.cpp $(LFLAGS)
 
 # linking
 $(EXE): app $(OBJ)
