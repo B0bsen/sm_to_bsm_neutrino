@@ -16,6 +16,10 @@ make
 make test
 make install
 
+# export linker library path (add to add to .bashrc for permanent effect)
+LD_LIBRARY_PATH=$HOME/smToBsmLibs/SQuIDS/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+
 # remove junk folders
 cd ~/
 rm -rf $(find SQuIDS* | head -n 1)
