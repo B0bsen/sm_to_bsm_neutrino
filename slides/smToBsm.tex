@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[percent]{overpic}
 \usepackage{xcolor}
+\usepackage{tcolorbox}
 \usepackage[absolute,overlay]{textpos}
 \usepackage{amsmath}
 \usepackage{algorithmic}
@@ -26,6 +27,7 @@
 \usepackage{lscape}
 \usepackage{url}
 \usepackage{centernot}
+\usepackage{xfrac}
 \newcommand{\fsl}[1]{{\centernot{#1}}}
 \newcommand{\defgl}{\mathrel{=\!\!\mathop:}}
 \newcommand{\defgr}{\mathrel{\mathop:\!\!=}}
@@ -118,58 +120,157 @@
 
 \section{Introduction}
 
-\begin{frame}{}
-  
-\end{frame}
-
-\begin{frame}{}
-  
-\end{frame}
-
-\begin{frame}{}
-  
-\end{frame}
-
-\begin{frame}{}
-  
-\end{frame}
-
-\begin{frame}{}
-  
-\end{frame}
-
-\begin{frame}{}
-  
-\end{frame}
-
-\section{Installation}
-
-\begin{frame}{Clone the Repo!}
-  Git Repository inlcuding all needed files:
-  \begin{block}{Instructions}
-    \texttt{cd} to the location where to place the repo \\
-    \texttt{git clone git@github:path/to/repo.git} \\
-    \texttt{cd repo}
-  \end{block}
-\end{frame}
-
-\begin{frame}{Prerequisites}
-  What do we need for this tutorial?
+\begin{frame}{Motivation}
+  Task: Solve time evolution of finite dimensional quantum (sub-)systems:
   \begin{itemize}
-    \item A unix-like (sub-)system 
-    \begin{itemize}
-      \item Linux
-      \item Mac (+ Xcode developer tools!)
-      \item On Windows: WSL
-    \end{itemize}
-    \item A C++ compiler
-    \item Make, wget, Git
+    \item Flavor oscillations
+    \item Quantum computation
+    \item Systems with finitely many energy levels
+    \item Spins
   \end{itemize}
-  Use scripts \texttt{install\_gsl.sh} and \texttt{install\_SQuIDS.sh} from the repo!
+  Time evolution of closed quantum system: Schrödinger equation
+  \begin{align}
+    i \frac{\partial}{\partial t} \vert \psi \rangle &= \hat{H} \vert \psi \rangle \qquad (\hbar = 1)
+  \end{align} 
+\end{frame}
+
+\begin{frame}{Density matrices instead of state vectors}
+  Often: finite dimensional system \(S\) coupled to a complicated (but uninteresting) environment \(E\)
+  \begin{itemize}
+    \item[\(\rightarrow\)] Get rid of Environment (keyword: partial trace)
+    \item[\(\rightarrow\)] Just consider degrees of freedom of interest
+  \end{itemize}
+  \textbf{Consequence: Decoherence}
+  \begin{itemize}
+    \item Subsystem cannot be described by pure state \(\vert \psi \rangle\)
+    \item Mixed state: Described by density matrix \(\varrho = \sum_{i} p_i \vert \psi_i \rangle \langle \psi_i \vert\)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Example: Neutrino oscillations in matter}
+  \begin{center}
+    \begin{tabular}[t]{c|c}
+      \(S \simeq \mathbb{C}^3\) & \(E\) \\
+      \toprule
+      flavor degrees of freedom & all remaining d.o.f (momenta, spins, \ldots) \\
+      \(\vert \psi \rangle = \sum_{\alpha = e}^{\tau}\psi_\alpha \vert \nu_\alpha \rangle \) & \(\rightarrow\) infinite dimensional 
+    \end{tabular}
+  \end{center}
+  \vspace{0.5cm}
+  \begin{itemize}
+    \item We are not at all interested in \(E\)
+    \item Only the \(\nu\) flavor composition is interesting to us 
+    \item \textbf{But}: \(E\) significantly influences flavor d.o.f.
+  \end{itemize}
+  \(\Rightarrow\) Need effective description!
+\end{frame}
+
+\begin{frame}{Time evolution of the density matrix}
+  Master equation(s): (multiple density matrices possible)
+  \begin{align*}
+    \frac{\mathrm{d}\varrho_j}{\mathrm{d}t} &= -i [\hat{H}_j(t), \varrho_j(t)] + \{\Gamma_j(t), \varrho_j(t)\} + F_j[\{\varrho_k\}_k, t]
+  \end{align*}
+  \begin{itemize}
+    \item Why multiple \(\varrho_j\)? E.g.: One per energy bin!
+    \item \(\hat{H} = \hat{H}_0 + \hat{H}_1(t)\): Unitary evolution
+    \item \(\Gamma\): Decoherence
+    \item \(F\): Other non-linear effects (coupling between \(\varrho_j\))
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Simple Example: \(\nu\) Oscillations in Vacuum}
+  Neutrino Experiment:
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Fixed baseline \(L\)
+        \item \(N\) energy bins \(\{E_j\}_j\)
+        \item \(\hat{H}^j = \hat{H}_0^j = E_j \cdot \mathbb{I} + \frac{1}{2E_j} \mathbb{M}^2\)
+        \item \(\Gamma \equiv 0\)
+        \item \(F \equiv 0\)
+        \item \(\varrho_j(t) = \sum_{\alpha = e}^{\tau} \phi_{\alpha}^j(t) \vert \nu_\alpha \rangle \langle \nu_\alpha \vert\)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{align*}
+        \mathbb{M} &= \sum_{j, k = 1}^{3} (\mathbb{M}_{0})_{jk} \vert \nu_j \rangle \langle \nu_k \vert \\
+        &= \sum_{\alpha, \beta = e}^{\tau} (\mathbb{M}_{1})_{\alpha\beta} \vert \nu_\alpha \rangle \langle \nu_\beta \vert \\
+        \mathbb{M}_{0} &= \begin{pmatrix}
+          m_1 & 0 & 0 \\
+          0 & m_2 & 0 \\
+          0 & 0 & m_3
+        \end{pmatrix} \\
+        \mathbb{M}_{1} &= U_{\mathrm{PMNS}}^\dagger \mathbb{M}_{1} U_{\mathrm{PMNS}}
+      \end{align*}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Some Important Considerations}
+  The master equation simplifies to
+  \begin{align*}
+    \frac{\mathrm{d}\varrho_j}{\mathrm{d}t} &= -i [\hat{H}_0^j, \varrho_j(t)]
+  \end{align*}
+  Further simplifications
+  \begin{itemize}
+    \item Consider in mass basis: \(\hat{H}_0^j\) is diagonal
+    \item Depends only on commutator!
+    \begin{itemize}
+      \item \([A, \mathbb{I}] = 0\) \(\Rightarrow\) \([\hat{H}_0^j, \varrho_j(t)] = [\hat{H}_0^j - \epsilon_j \mathbb{I}, \varrho_j(t)]\)
+      \item \(\epsilon_j := E_j + \sfrac{m_1^2}{2 E_j}\)
+    \end{itemize}
+  \end{itemize}
+  \begin{align*}
+    \tilde{H}^j &= \frac{1}{2E_j}\begin{pmatrix}
+      0 & 0 & 0 \\
+      0 & \Delta m_{21}^2 & 0 \\
+      0 & 0 & \Delta m_{31}^2 
+    \end{pmatrix}
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Some Important Considerations (ctd.)}
+  % Interaction picture
+\end{frame}
+
+\begin{frame}{Summary}
+  What did we learn so far (in general)
+  \begin{enumerate}
+    \item We passed to density matrix formulation (allows for mixed states)
+    \item Formulated master equation
+    \item Can subtract a part prop. to identity from \(\hat{H}\) (only energy diff. important)
+    \item Can solve \(\hat{H}_0\) exactly (interaction picture) \(\varrho \rightarrow e^{-i\hat{H}_0 \Delta T} \varrho e^{i\hat{H}_0 \Delta T}\)
+  \end{enumerate}
+\end{frame}
+
+\section{SQuIDS}
+
+\begin{frame}{Overview}
+  
+\end{frame}
+
+\begin{frame}{Const}
+  
+\end{frame}
+
+\begin{frame}{SU Vector}
+  
+\end{frame}
+
+\begin{frame}{SQuIDS}
+  
 \end{frame}
 
 \section{Exercises}
 
+\begin{frame}{Clone the Repo!}
+  Git Repository includes all needed files (slides, code templates)
+  \begin{block}{Instructions}
+    \texttt{cd} to the location where you want to place the repo \\
+    \texttt{git clone https://github.com/B0bsen/sm\_to\_bsm\_neutrino.git} \\
+    \texttt{cd sm\_to\_bsm\_neutrino}
+  \end{block}
+\end{frame}
 
 \begin{frame}{Const class exercise}
   \begin{enumerate}
@@ -229,6 +330,69 @@
 
 \begin{frame}
     \centering \Huge BACK UP
+\end{frame}
+
+\begin{frame}{Installation}
+  What do we need for this tutorial?
+  \begin{itemize}
+    \item A unix-like (sub-)system 
+    \begin{itemize}
+      \item Linux
+      \item Mac (+ Xcode developer tools!)
+      \item On Windows: WSL
+    \end{itemize}
+    \item A C++ compiler
+    \item Make, wget, Git
+  \end{itemize}
+  Use scripts \texttt{install\_gsl.sh} and \texttt{install\_SQuIDS.sh} from the repo!
+\end{frame}
+
+\begin{frame}{Installation (GSL)}
+  \begin{columns}
+    \begin{column}{\textwidth}
+      {\tiny
+        \begin{tcolorbox}[colback=gray!5!white]
+        \texttt{cd \$HOME} \\
+        \texttt{mkdir -p smToBsmLibs/gsl} \\
+        \texttt{wget ftp://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz} \\
+        \texttt{tar -zxvf gsl-latest.tar.gz} \\
+        \texttt{rm gsl-latest.tar.gz} \\
+        \texttt{cd \$(find gsl-* | head -n 1)} \\
+        \texttt{./configure --prefix=\$HOME/smToBsmLibs/gsl} \\
+        \texttt{make} \\
+        \texttt{make check} \\
+        \texttt{make install} \\
+        \texttt{LD\_LIBRARY\_PATH=\$HOME/smToBsmLibs/gsl/lib:\$LD\_LIBRARY\_PATH} \\
+        \texttt{export LD\_LIBRARY\_PATH} \\
+        \texttt{cd \$HOME} \\
+        \texttt{rm -rf \$(find gsl-* | head -n 1)}
+      \end{tcolorbox}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Installation (SQuIDS)}
+  \begin{columns}
+    \begin{column}{\textwidth}
+      {\tiny
+        \begin{tcolorbox}[colback=gray!5!white]
+        \texttt{cd \$HOME} \\
+        \texttt{mkdir -p smToBsmLibs/SQuIDS} \\
+        \texttt{git clone https://github.com/jsalvado/SQuIDS.git} \\
+        \texttt{cd \$(find SQuIDS* | head -n 1)} \\
+        \texttt{./configure --with-gsl-incdir=\$HOME/smToBsmLibs/gsl/include \textbackslash} \\
+        \texttt{  --with-gsl-libdir=\$HOME/smToBsmLibs/gsl/lib \textbackslash} \\ 
+        \texttt{  --prefix=\$HOME/smToBsmLibs/SQuIDS} \\
+        \texttt{make} \\
+        \texttt{make test} \\
+        \texttt{make install} \\
+        \texttt{LD\_LIBRARY\_PATH=\$HOME/smToBsmLibs/SQuIDS/lib:\$LD\_LIBRARY\_PATH \textcolor{olive}{\# linux only}} \\
+        \texttt{export LD\_LIBRARY\_PATH \textcolor{olive}{\# linux only}} \\
+        \texttt{cd \$HOME} \\
+        \texttt{rm -rf \$(find SQuIDS* | head -n 1)}
+      \end{tcolorbox}}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \backupend

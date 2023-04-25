@@ -9,7 +9,7 @@ wget ftp://ftp.gnu.org/gnu/gsl/gsl-latest.tar.gz
 # unpack and configure the library
 tar -zxvf gsl-latest.tar.gz
 rm gsl-latest.tar.gz
-cd $(find gsl-*/ | head -n 1)
+cd $(find gsl-* | head -n 1)
 ./configure --prefix=$HOME/smToBsmLibs/gsl
 
 # make, check and install
@@ -23,5 +23,5 @@ export LD_LIBRARY_PATH
 
 # remove all remaining junk directories
 cd ~/
-rm -rf $(find gsl-*/ | head -n 1)
+rm -rf $(find gsl-* | head -n 1)
 
