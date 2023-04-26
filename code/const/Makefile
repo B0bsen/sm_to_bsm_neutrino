@@ -20,8 +20,8 @@ LDFLAGS:=$(LPATH)
 LIBS:=-lSQuIDS -lgsl -lgslcblas -lm
 
 # define object files and executable
-OBJ:=obj/SU_vector.o
-EXE:=app/SU_vector.exe
+OBJ:=obj/const.o
+EXE:=app/const.exe
 
 all: $(EXE)
 
@@ -33,8 +33,8 @@ app:
 	mkdir app
 
 # compilation
-obj/SU_vector.o: obj src/SU_vector.cpp
-	@$(CXX) -c $(CFLAGS) $(LFLAGS) -o obj/SU_vector.o src/SU_vector.cpp
+obj/const.o: obj src/const.cpp
+	@$(CXX) -c $(CFLAGS) $(LFLAGS) -o obj/const.o src/const.cpp
 
 # linking
 $(EXE): app $(OBJ)
