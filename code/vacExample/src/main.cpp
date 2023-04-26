@@ -1,4 +1,4 @@
-#include "vacuum.h"
+#include "vacuum.hpp"
 #include <fstream>
 
 int main()

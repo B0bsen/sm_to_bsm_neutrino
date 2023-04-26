@@ -1,4 +1,4 @@
-#include "vacuum.h"
+#include "vacuum.hpp"
 
 using squids::SU_vector;
 
@@ -55,7 +55,7 @@ double vacuum::Get_flux(int i, double e){
 }
 
 // destructor
-~vacuum(){
+vacuum::~vacuum(){
   delete[] b1_proj;
   delete[] b0_proj;
 }

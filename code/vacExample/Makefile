@@ -33,7 +33,7 @@ app:
 	mkdir app
 
 # compilation
-obj/main.o: obj src/vacuum.cpp src/vacuum.hpp
+obj/vacuum.o: obj src/vacuum.cpp src/vacuum.hpp
 	@$(CXX) -c $(CFLAGS) $(LFLAGS) -o obj/vacuum.o src/vacuum.cpp
 
 obj/main.o: obj src/main.cpp
