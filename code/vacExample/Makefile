@@ -1,62 +1,57 @@
-# variables
-## Directories
-LIBDIR:=lib
-INCDIR:=include
-SQINCDIR:=include/SQuIDS
-SRCDIR:=src
-INSTALL_LIBDIR:=lib
-PATH_SQUIDS:=$(HOME)/Libraries/SQuIDS
+# system type
+SYS:=$(shell uname)
 
-## Compiler
-CC:=gcc
+# c++ compiler
 CXX:=g++
-AR:=ar
-LD:=g++
 
-## Flags
-### Compiler
-GSL_CFLAGS=-I$(HOME)/Libraries/gsl/2.7.1/include
+# define variables for GSL and SQuIDS paths
+GSL:=$(HOME)/smToBsmLibs/gsl
+SQUIDS:=$(HOME)/smToBsmLibs/SQuIDS
 
-CFLAGS:= -O3 -fPIC -I$(INCDIR) $(GSL_CFLAGS)
+# specify include and library paths
+IPATH:=-I$(GSL)/include -I$(SQUIDS)/include
+LPATH:=-L$(GSL)/lib -L$(SQUIDS)/lib
 
-CXXFLAGS:= -std=c++11
-CXXFLAGS+=-I$(PATH_SQUIDS)/$(INCDIR)
+# compiler and linker options
+CFLAGS:=$(IPATH) -O2 -std=c++11
+LDFLAGS:=$(LPATH)
 
-### Linker
-GSL_LDFLAGS=-L$(HOME)/Libraries/gsl/2.7.1/lib -lgsl -lgslcblas -lm
+# additional libraries
+LIBS:=-lSQuIDS -lgsl -lgslcblas -lm
 
-LDFLAGS:= -Wl,-rpath -Wl,$(LIBDIR) $(GSL_LDFLAGS)
-LDFLAGS+= -Wl,-rpath -Wl,$(PATH_SQUIDS)/$(LIBDIR) -L$(PATH_SQUIDS)/$(LIBDIR) -lSQuIDS $(GSL_LDFLAGS)
+# define object files and executable
+OBJ:=obj/main.o obj/vacuum.o
+EXE:=app/main.exe
 
-## main target name
-EXE=app/vacuum.exe
+all: $(EXE)
 
-# Compilation rules
-all: $(EXE) data
-
-obj/vacuum.o: obj src/vacuum.cpp src/vacuum.h
-	$(CXX) -c $(CXXFLAGS) $(CFLAGS) -o obj/vacuum.o src/vacuum.cpp
-
-obj/main.o: obj src/main.cpp src/vacuum.h
-	$(CXX) -c $(CXXFLAGS) $(CFLAGS) -o obj/main.o src/main.cpp
-
-$(EXE): app obj/main.o obj/vacuum.o
-	$(CXX) $(CXXFLAGS) $(CFLAGS) obj/main.o obj/vacuum.o $(LDFLAGS)  -o $(EXE)
-
-data:
-	mkdir data
-
+# folders
 obj:
 	mkdir obj
-
-exe:
-	$(EXE)
 
 app:
 	mkdir app
 
+# compilation
+obj/main.o: obj src/vacuum.cpp src/vacuum.hpp
+	@$(CXX) -c $(CFLAGS) $(LFLAGS) -o obj/vacuum.o src/vacuum.cpp
+
+obj/main.o: obj src/main.cpp
+	@$(CXX) -c $(CFLAGS) $(LFLAGS) -o obj/main.o src/main.cpp
+
+# linking
+$(EXE): app $(OBJ)
+ifeq ($(SYS),Darwin)
+	@mkdir -p lib
+	@cp $(SQUIDS)/lib/libSQuIDS.dylib ./lib
+	@$(CXX) $(CFLAGS) $(LDFLAGS) -o $(EXE) $(OBJ) $(LIBS)
+else
+	@$(CXX) $(CFLAGS) $(LDFLAGS) -o $(EXE) $(OBJ) $(LIBS)
+endif
+
+# phony targets
+run: $(EXE)
+	./$(EXE)
+
 clean:
-	rm -rf app obj
-
-.PHONY: clean exe
-
+	rm -rf obj app lib

@@ -14,8 +14,8 @@ class vacuum: public squids::SQuIDS {
         // SU vector storing the mass squared differences: dm_{21}^2 and dm_{31}^2
         squids::SU_vector DM2; 
     public:
-        std::unique_ptr<squids::SU_vector[]> b0_proj; // mass basis projectors
-        std::unique_ptr<squids::SU_vector[]> b1_proj; // flavor basis projectors
+        squids::SU_vector *b0_proj; // mass basis projectors
+        squids::SU_vector *b1_proj; // flavor basis projectors
 
     vacuum(){};
     // constructor and initialization
@@ -34,6 +34,9 @@ class vacuum: public squids::SQuIDS {
   
     // get the final flux, the initial one is flat in energy
     double Get_flux(int, double);
+
+    // destructor
+    ~vacuum();
 };
 
 #endif

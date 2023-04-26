@@ -18,7 +18,7 @@ void vacuum::init(unsigned int nbins, unsigned int nflavor, double Eini, double 
     Set_xrange(Eini, Efin, "log");
     
     // set the oscillation parameters
-    const double ev2=params.eV*params.eV;
+    const double ev2 = params.eV * params.eV;
     params.SetEnergyDifference(1,7.5e-5 * ev2); //delta m^2 2,1
     params.SetEnergyDifference(2,2.45e-3 * ev2); //delta m^2 3,1
     params.SetMixingAngle(0, 1, 33.48 * params.degree); //theta 1,2
@@ -26,12 +26,12 @@ void vacuum::init(unsigned int nbins, unsigned int nflavor, double Eini, double 
     params.SetMixingAngle(1, 2, 42.3 * params.degree);  //theta 2,3
 
     // Construction of the projectors for the mass and flavor bases
-    b0_proj.reset(new SU_vector[nsun]);
-    b1_proj.reset(new SU_vector[nsun]);
+    b0_proj = new SU_vector[nsun];
+    b1_proj = new SU_vector[nsun];
 
     for(int i = 0; i < nsun; i++){
-      b0_proj[i]=SU_vector::Projector(nsun,i);
-      b1_proj[i]=SU_vector::Projector(nsun,i);
+      b0_proj[i] = SU_vector::Projector(nsun,i);
+      b1_proj[i] = SU_vector::Projector(nsun,i);
       b1_proj[i].RotateToB1(params);
     }
 
@@ -50,6 +50,12 @@ SU_vector vacuum::H0(double x, unsigned int irho) const{
 }
 
 //function that returns the flux for the neutrino with flavor "i" and energy "e"
-double vacuum::Get_flux(int i,double e){
-  return GetExpectationValueD(b1_proj[i],0,e);
+double vacuum::Get_flux(int i, double e){
+  return GetExpectationValueD(b1_proj[i], 0, e);
+}
+
+// destructor
+~vacuum(){
+  delete[] b1_proj;
+  delete[] b0_proj;
 }
