@@ -19,10 +19,11 @@ class vacuum : public squids::SQuIDS
 
     // member functions
     vacuum();
-    vacuum(unsigned int nbins, unsigned int nflavor, double E0, double E1);
-    void init(unsigned int nbins, unsigned int nflavor, double E0, double E1);
+    vacuum(unsigned int nbins, unsigned int nflavor, double E0, double E1, std::string scale);
+    void init(unsigned int nbins, unsigned int nflavor, double E0, double E1, std::string scale);
     squids::SU_vector H0(double E, unsigned int irho) const;
-    double GetProb(int, double);
+    double GetProb(unsigned int flav, unsigned int n);
+    double GetProbD(unsigned int flav, double E);
     ~vacuum();
 };
 

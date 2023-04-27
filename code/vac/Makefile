@@ -35,6 +35,9 @@ obj:
 app:
 	mkdir app
 
+plots:
+	mkdir plots
+
 # compilation
 obj/vacuum.o: obj src/vacuum.cpp src/vacuum.hpp
 	@$(CXX) -c $(CFLAGS) $(LFLAGS) -o obj/vacuum.o src/vacuum.cpp
@@ -52,9 +55,21 @@ else
 	@$(CXX) $(CFLAGS) $(LDFLAGS) -o $(EXE) $(OBJ) $(LIBS)
 endif
 
+# data and plotting
+DATA=data/E.txt
+DATA+=data/p_nu_e.txt
+DATA+=data/p_nu_mu.txt
+DATA+=data/p_nu_tau.txt
+
+$(DATA): data $(EXE)
+	./$(EXE)
+
+plot: plots src/plot.py $(DATA)
+	python3 src/plot.py
+
 # phony targets
 run: $(EXE) data
 	./$(EXE)
 
 clean:
-	rm -rf data obj app lib
+	rm -rf plots data obj app lib
