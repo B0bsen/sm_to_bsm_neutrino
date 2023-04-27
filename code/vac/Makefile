@@ -26,6 +26,9 @@ EXE:=app/main.exe
 all: $(EXE)
 
 # folders
+data: 
+	mkdir data
+
 obj:
 	mkdir obj
 
@@ -50,8 +53,8 @@ else
 endif
 
 # phony targets
-run: $(EXE)
+run: $(EXE) data
 	./$(EXE)
 
 clean:
-	rm -rf obj app lib
+	rm -rf data obj app lib
