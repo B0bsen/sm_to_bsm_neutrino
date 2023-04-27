@@ -30,9 +30,7 @@ int main(){
 	std::vector<double> dm2 = {0, 7.5e-5 * params.eV * params.eV, 2.45e-3 * params.eV * params.eV};
 
 	for (int i = 0; i < dim; i++)
-	{
 		DM2 +=dm2[i] * proj0[i];
-	}
 	
 
 	return 0;
