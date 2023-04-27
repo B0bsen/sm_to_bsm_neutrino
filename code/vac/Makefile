@@ -32,11 +32,11 @@ all: $(EXE)
 plots:
 	mkdir plots
 
-app:
-	mkdir app
-
 data: 
 	mkdir data
+
+app:
+	mkdir app
 
 obj:
 	mkdir obj
