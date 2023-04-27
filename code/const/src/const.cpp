@@ -2,7 +2,7 @@
 # include <SQuIDS/SQuIDS.h>
 
 int main(){
-	// initialize SQuIDS onject
+	// initialize SQuIDS object
 	squids::Const units;
 	
 	// how many inverse electron volts are 300 km?
