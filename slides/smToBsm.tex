@@ -116,7 +116,18 @@
 
 \frame{\titlepage}
 
-\frame{\tableofcontents}
+\begin{frame}
+  Outline:
+  \begin{enumerate}
+    \item Introduction (Quantum Evolution with Density Matrices)
+    \item SQuIDS (Overview and Exercises)
+    \begin{enumerate}
+      \item The Const class (Overview + Exercise)
+      \item The SU\_vector class (Overview + Exercise)
+      \item The SQuIDS class (Overview + Exercise)
+    \end{enumerate}
+  \end{enumerate}
+\end{frame}
 
 \section{Introduction}
 
@@ -200,7 +211,7 @@
           0 & m_2 & 0 \\
           0 & 0 & m_3
         \end{pmatrix} \\
-        \mathbb{M}_{1} &= U_{\mathrm{PMNS}}^\dagger \mathbb{M}_{1} U_{\mathrm{PMNS}}
+        \mathbb{M}_{1} &= U_{\mathrm{PMNS}}^\dagger \mathbb{M}_{0} U_{\mathrm{PMNS}}
       \end{align*}
     \end{column}
   \end{columns}
@@ -230,38 +241,47 @@
 \end{frame}
 
 \begin{frame}{Some Important Considerations (ctd.)}
-  % Interaction picture
+  Can solve \(H_0\) evolution analytically!
+  \begin{itemize}
+    \item Pass to interaction picture:
+    \begin{align*}
+      \tilde{\varrho}(t) &:= \exp(i H_0 t) \varrho \exp(-i H_0 t) \\
+      \Rightarrow \dot{\varrho} &= - i [H_0, \rho] + \exp(-i H_0 t) \dot{\tilde{\varrho}} \exp(i H_0 t)
+    \end{align*}
+    \item Can subtract \(-i[H_0, \varrho]\) on both sides of master equation
+    \item Must transform all terms to interaction picture (SQuIDS does that automatically and efficiently)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Some Important Considerations (ctd.)}
+  All matrices in our system are hermitian: \(A^\dagger = A\)
+  \begin{itemize}
+    \item Hermitian \(n \times n\) matrices form \(N = n^2\) dimenional real vector space
+    \item Convenient basis: \(SU(n)\) generators \(\sigma_i\) (e.g. \(n = 2\): Pauli matrices + identity)
+    \item Decompose: \(\varrho = \sum_{i = 0}^{n^2 - 1} \rho_i \cdot \sigma_i\)
+    \item Components \(\rho_i\) form \(n^2\) dimensional vector called \texttt{SU\_vector} in the following
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Summary}
-  What did we learn so far (in general)
+  What did we learn so far (in general):
   \begin{enumerate}
     \item We passed to density matrix formulation (allows for mixed states)
     \item Formulated master equation
-    \item Can subtract a part prop. to identity from \(\hat{H}\) (only energy diff. important)
-    \item Can solve \(\hat{H}_0\) exactly (interaction picture) \(\varrho \rightarrow e^{-i\hat{H}_0 \Delta T} \varrho e^{i\hat{H}_0 \Delta T}\)
+    \item Can subtract \(\epsilon_0 \cdot \mathbb{I}\) from \(\hat{H}\) (only energy diff. important)
+    \item Can solve \(\hat{H}_0\) exactly (interaction picture) \(\varrho \rightarrow e^{i\hat{H}_0 t} \varrho e^{- i\hat{H}_0 t}\)
+    \item Can represent \(\varrho, H, \ldots\) as \(n^2\) dimensional, real vector (\texttt{SU\_vector})!
+    \begin{itemize}
+      \item[\(\rightarrow\)] Efficient and preserves hermiticity automatically!
+    \end{itemize}
   \end{enumerate}
 \end{frame}
 
 \section{SQuIDS}
 
-\begin{frame}{Overview}
-  
+\begin{frame}
+  \centering {\Huge SQuIDS}
 \end{frame}
-
-\begin{frame}{Const}
-  
-\end{frame}
-
-\begin{frame}{SU Vector}
-  
-\end{frame}
-
-\begin{frame}{SQuIDS}
-  
-\end{frame}
-
-\section{Exercises}
 
 \begin{frame}{Clone the Repo!}
   Git Repository includes all needed files (slides, code templates)
@@ -270,6 +290,93 @@
     \texttt{git clone https://github.com/B0bsen/sm\_to\_bsm\_neutrino.git} \\
     \texttt{cd sm\_to\_bsm\_neutrino}
   \end{block}
+\end{frame}
+
+\begin{frame}{Overview}
+  SQuIDS mainly consists out of 3 interconnected classes:
+  \begin{enumerate}
+    \item<1-> \texttt{squids::Const}
+    \begin{itemize}
+      \item<1-> Implements all sorts of constants of nature
+      \item<1-> Conversion between natural units and other unit systems
+      \item<1-> Stores system parameters (mixing angles, energy differences, \ldots)
+    \end{itemize} 
+    \item<2-> \texttt{squids::SU\_vector}
+    \begin{itemize}
+      \item<2-> Represents hermitian matrices efficiently
+      \item<2-> Implements all sorts of operations on them (Unitary transformations, trace, commutator, \ldots)
+    \end{itemize}
+    \item<3-> \texttt{squids::SQuIDS}
+    \begin{itemize}
+      \item<3-> Abstract base class, uses \texttt{squids::Const} and \texttt{squids::SU\_vector}
+      \item<3-> Implements time evolution of the system of density matrices
+      \item<3-> Includes methods for taking expectation values etc
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \centering {\Huge SQuIDS - The Const Class}
+\end{frame}
+
+\subsection{SQuIDS - Const}
+\begin{frame}{Const - Construction of objects}
+  Can only be default constructed:
+  \begin{tcolorbox}[colback=gray!5!white]
+    \texttt{squids::Const units;} 
+  \end{tcolorbox}
+  \begin{itemize}
+    \item Constructs \texttt{squids::Const} object called \texttt{units}
+    \item This object contains
+    \begin{itemize}
+      \item Different physical constants (\(G_F, N_A, G, m_{p}, \ldots\))
+      \item Values of km, s, J, kg, etc. in natural units
+      \item Yet unspecified values for: 
+      \begin{itemize}
+        \item basis change from \(B_0\) to \(B_1\) (e.g. mass and flavor basis)
+        \item energy differences which can be used for the hamiltonian \(\hat{H}_0\)
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Const -  Unit conversion}
+  Easily convert between SI and natural units:
+  \begin{tcolorbox}[colback=gray!5!white]
+    \texttt{squids::Const units;} \\
+    \texttt{double L = 10 * units.cm; \textcolor{olive}{\textbackslash \textbackslash {} 506773 eV\^{}\{-1\}}} \\ 
+    \texttt{double T = 1 * units.year; \textcolor{olive}{\textbackslash \textbackslash {} 4.79116e+22 eV\^{}\{-1\}}} \\
+    \texttt{double GF = units.GF * (units.GeV * units.GeV); \textcolor{olive}{\textbackslash \textbackslash {} 1.16638e-05 GeV\^{}\{-2\}}}
+  \end{tcolorbox}
+  The units are to be read as \texttt{[unit we want]} / \texttt{[eV}\(^{\alpha}\)\texttt{]}, e.g.:
+  \begin{itemize}
+    \item[\texttt{km} / \texttt{[eV}\(^{-1}\)\texttt{]}:] \texttt{[Value in eV}\(^{-1}\)\texttt{]} \(=\) \texttt{[Value in km]} \(\cdot\) \texttt{km} / \texttt{[eV}\(^{-1}\)\texttt{]}
+  \end{itemize}
+  \texttt{[Value in km]} \(= L \) / \texttt{km}
+\end{frame}
+
+\begin{frame}{Const -  Setting / Getting Mixing Angles}
+  Furthermore you can store system parameters:
+  {
+  \begin{tcolorbox}[colback=gray!5!white]
+    \texttt{squids::Const params;} \\
+    \textcolor{olive}{\texttt{\textbackslash \textbackslash {} Sets} \(\theta_{12} = 24\)°} \\
+    \texttt{params.SetMixingAngle(0, 1, 24 * params.degree);} \\
+    \textcolor{olive}{\texttt{\textbackslash \textbackslash {} Sets} \(\delta_{13} = 2\)°} \\
+    \texttt{params.SetPhase(0, 2, 2 * params.degree);} \\
+    \textcolor{olive}{\texttt{\textbackslash \textbackslash {} Sets} \(\Delta E_{10} = 7 \mathrm{eV}\)} \\
+    \texttt{params.SetEnergyDifference(1, 7 * params.eV);}
+  \end{tcolorbox}}
+  \begin{itemize}
+    \item Substitute \texttt{Set} for \texttt{Get}: returns corresponding value
+    \item Energy differences: Only convenience parameters simplifying definition of \(\hat{H}_0\)
+  \end{itemize}
+\end{frame}
+
+\subsection{SQuIDS - Const: Exercise}
+
+\begin{frame}
+  \centering {\Huge SQuIDS - The Const Class: Exercise}
 \end{frame}
 
 \begin{frame}{Const class exercise}
@@ -295,6 +402,22 @@
   \end{enumerate}
 \end{frame}
 
+\subsection{SQuIDS - SU\_vector}
+
+\begin{frame}
+  \centering {\Huge SQuIDS - The SU\_vector Class}
+\end{frame}
+
+\begin{frame}{SU Vector}
+  
+\end{frame}
+
+\subsection{SQuIDS - SU\_vector: Exercise}
+
+\begin{frame}
+  \centering {\Huge SQuIDS - The SU\_vector Class: Exercises}
+\end{frame}
+
 \begin{frame}{SU vector exercise}
   \begin{enumerate}
     \item Declare an empty SU vector corresponding to a 3D Hilbert space
@@ -309,6 +432,22 @@
       \end{pmatrix}
     \end{align}
   \end{enumerate}
+\end{frame}
+
+\subsection{SQuIDS - SQuIDS}
+
+\begin{frame}
+  \centering {\Huge SQuIDS - The SQuIDS Class}
+\end{frame}
+
+\begin{frame}{SQuIDS}
+  
+\end{frame}
+
+\subsection{SQuIDS - SQuIDS: Exercise}
+
+\begin{frame}
+  \centering {\Huge SQuIDS - The SQuIDS Class: Exercises}
 \end{frame}
 
 \begin{frame}{SQuIDS application: Neutrino oscillations in vacuum}

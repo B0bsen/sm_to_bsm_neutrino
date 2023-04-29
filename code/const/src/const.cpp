@@ -23,5 +23,12 @@ int main(){
 
 	/// \Delta m_{31}^2 = 2.45 x 10−3 eV^2
 	
+	squids::Const units;
+	double L = 10 * units.cm;
+	double T = 1 * units.year;
+	double GF = units.GF * (units.GeV * units.GeV);
+	std::cout << L << std::endl;
+	std::cout << T << std::endl;
+	std::cout << GF << std::endl;
 	return 0;
 }
