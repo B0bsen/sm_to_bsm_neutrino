@@ -357,7 +357,6 @@
 
 \begin{frame}{Const -  Setting / Getting Mixing Angles}
   Furthermore you can store system parameters:
-  {
   \begin{tcolorbox}[colback=gray!5!white]
     \texttt{squids::Const params;} \\
     \textcolor{olive}{\texttt{\textbackslash \textbackslash {} Sets} \(\theta_{12} = 24\)°} \\
@@ -366,7 +365,7 @@
     \texttt{params.SetPhase(0, 2, 2 * params.degree);} \\
     \textcolor{olive}{\texttt{\textbackslash \textbackslash {} Sets} \(\Delta E_{10} = 7 \mathrm{eV}\)} \\
     \texttt{params.SetEnergyDifference(1, 7 * params.eV);}
-  \end{tcolorbox}}
+  \end{tcolorbox}
   \begin{itemize}
     \item Substitute \texttt{Set} for \texttt{Get}: returns corresponding value
     \item Energy differences: Only convenience parameters simplifying definition of \(\hat{H}_0\)
@@ -408,14 +407,59 @@
   \centering {\Huge SQuIDS - The SU\_vector Class}
 \end{frame}
 
-\begin{frame}{SU Vector}
-  
+\begin{frame}{SU Vector - Contructors}
+  Construct a SU Vector:
+  \begin{itemize}
+    \item Default: No entries, no size
+    \begin{tcolorbox}[colback=gray!5!white]
+      \texttt{squids::SU\_vector rho;}
+    \end{tcolorbox}
+    \item Defined Dimension: entries are zero, size is \texttt{dim}(\(\mathcal{H}\))\(> 0\)
+    \begin{tcolorbox}[colback=gray!5!white]
+      \texttt{squids::SU\_vector rho(dim); \textcolor{olive}{\textbackslash \textbackslash size = dim}\(^2\)}
+    \end{tcolorbox}
+  \end{itemize}
+  And more: construct from \texttt{array}, \texttt{gsl\_matrix\_complex}, \texttt{std::vector} \ldots
+\end{frame}
+
+\begin{frame}{SU Vector - Special Matrices}
+  Construct a SU Vector to Standard Form:
+  \begin{itemize}
+    \item Identity: Corresponding matrix is the identity \((Id)_{ij} = \delta_{ij}\)
+    \begin{tcolorbox}[colback=gray!5!white]
+      \texttt{squids::SU\_vector Id }\\
+      \texttt{= squids::SU\_vector::Identity(dim);}
+    \end{tcolorbox}
+    \item Projector on state \(k_0\): only the \((k_0,k_0)\) element is 1, i.e. \((\mathbb{P}_{k_0})_{ij} = \delta_{i k_0} \delta_{j k_0}\)
+    \begin{tcolorbox}[colback=gray!5!white]
+      \texttt{squids::SU\_vector P\_k0} \\
+      \texttt{= squids::SU\_vector::Projector(dim, k0);}
+    \end{tcolorbox}
+  \end{itemize}
+  And more: See \href{https://arxiv.org/abs/1412.3832}{documentation} (also in the repo)
+\end{frame}
+
+\begin{frame}{SU Vector - Functions}
+  Manipulate a SU Vector:
+  \begin{itemize}
+    \item Rotate from one basis to another (\(B_0 \leftrightarrow B_1\)): (using angles specfied in params)
+    \begin{tcolorbox}[colback=gray!5!white]
+      \texttt{rho.RotateToB1(params); \textcolor{olive}{\textbackslash \textbackslash B0 to B1}} \\
+      \texttt{rho.RotateToB0(params); \textcolor{olive}{\textbackslash \textbackslash B1 to B0}}
+    \end{tcolorbox}
+    \item Return dim of Hilbert space, Size of vector:
+    \begin{tcolorbox}[colback=gray!5!white]
+      \texttt{rho.Dim(); \textcolor{olive}{\textbackslash \textbackslash returns dim(H)}} \\
+      \texttt{rho.Size(); \textcolor{olive}{\textbackslash \textbackslash returns number of elements}}
+    \end{tcolorbox}
+  \end{itemize}
+  Furthermore: You can add, subtract multiply (also with scalars), assign, access elements via \texttt{rho[]} etc.
 \end{frame}
 
 \subsection{SQuIDS - SU\_vector: Exercise}
 
 \begin{frame}
-  \centering {\Huge SQuIDS - The SU\_vector Class: Exercises}
+  \centering {\Huge SQuIDS - The SU\_vector Class: Exercise}
 \end{frame}
 
 \begin{frame}{SU vector exercise}
@@ -447,19 +491,44 @@
 \subsection{SQuIDS - SQuIDS: Exercise}
 
 \begin{frame}
-  \centering {\Huge SQuIDS - The SQuIDS Class: Exercises}
+  \centering {\Huge SQuIDS - The SQuIDS Class: Exercise}
 \end{frame}
 
 \begin{frame}{SQuIDS application: Neutrino oscillations in vacuum}
-  
+  \begin{enumerate}
+    \item Declare vacuum class publically derived from squids::SQuIDS class in \texttt{vac/src/vacuum.hpp} with methods
+    \begin{itemize}
+      \item Default constructor
+      \item Initializing constructor + \texttt{init} function
+      \item \texttt{H0}
+      \item \texttt{GetProbabilities}
+      \item Destructor if needed
+    \end{itemize}
+    \item Define the corresponding member functions in \texttt{vac/src/vacuum.cpp}
+    \begin{itemize}
+      \item \texttt{nbins} \(x\)-nodes corresponding to number of \(E\) bins (log scaled)
+      \item One density function per node, no scalar functions
+      \item \texttt{nflavor} neutrino flavors
+      \item Initial condition \(\varrho_i(t = 0) = \mathbb{P}_{e}\) for all \(i \in \{1, \ldots,\texttt{nbins}\}\)
+    \end{itemize}
+  \end{enumerate}
 \end{frame}
 
-\begin{frame}{}
-  
+\begin{frame}{SQuIDS application: Neutrino oscillations in vacuum}
+  \begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Initialize an object from your class in \texttt{vac/src/main.cpp} (\texttt{nbins} = 1000, \texttt{nflavor} = 3, \(E \in [10 \,\mathrm{MeV}, 10 \,\mathrm{GeV}]\))
+    \item Evolve the system for \(L = 300 \; \mathrm{km}\)
+    \item Save the oscillation probabilities \(P_{e\alpha}(E_j, L)\) to file(s) \(\alpha = e, \mu, \tau\)
+    \item Plot them against the energy
+  \end{enumerate}
 \end{frame}
 
-\begin{frame}{}
-  
+\begin{frame}{Outlook}
+  \begin{itemize}
+    \item So far we only scratched the surface of SQuIDS' abilities
+    \item Including \(\hat{H}_1(t), \Gamma, F \neq 0\) opens up possibilities to solve a vast range of systems
+  \end{itemize}
 \end{frame}
 
 \appendix
