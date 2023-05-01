@@ -484,8 +484,91 @@
   \centering {\Huge SQuIDS - The SQuIDS Class}
 \end{frame}
 
-\begin{frame}{SQuIDS}
-  
+\begin{frame}{SQuIDS - General Overview pt. I}
+  \texttt{squids::SQuIDS} is a so called base class:
+  \begin{itemize}
+    \item You derive your own class from it 
+    \item It provides fundamental functionality through member functions
+    \begin{itemize}
+      \item Integration of the master equation
+      \item Efficient memory management and storage of density matrices
+    \end{itemize}
+    \item Already includes several members storing basic data of your system 
+    \item Virtual member functions:
+    \begin{itemize}
+      \item Some you have to define for the class to work (\texttt{H0}, constructors, \texttt{init}, \ldots)
+      \item Some you can ignore if your system doesn't need them
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{SQuIDS - General Overview pt. II}
+  Distribution of density matrices across the nodes [arxiv:1412.3832]:
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{figs/squids_nodes.png}
+  \end{center}
+  \begin{itemize}
+    \item \texttt{n} nodes \(x_i\) (energy bins, angles, whatever feature of your system)
+    \item At each node:
+    \begin{itemize}
+      \item \texttt{nrho} density matrices
+      \item \texttt{ns} scalars (not important for us)
+    \end{itemize}
+  \end{itemize}
+  \(\rightarrow\) Specify initial data, \texttt{H0}, \texttt{HI}, \texttt{GammaRho}, etc. \\
+  \(\Rightarrow\) \texttt{SQuIDS} evolves the whole system (+ can take expectation values of observables)
+\end{frame}
+
+\begin{frame}{SQuIDS - Constructors}
+  Constructors / Initializors: (Set bkg. params and allocate memory)
+  \begin{tcolorbox}[colback=gray!5!white]
+    \texttt{SQuDIS(); \textcolor{olive}{\textbackslash\textbackslash {} default}} \\
+    \texttt{SQuDIS(uint nx, uint dim, unit nrho, uint nscalar, double ti = 0);} \\
+    \texttt{void ini(uint nx, uint dim, unit nrho, uint nscalar, double ti = 0);}
+  \end{tcolorbox}
+  \begin{itemize}
+    \item \texttt{nx}: Number of \(x\) nodes \texttt{x\_i}
+    \item \texttt{dim}: Dimensions of Hilbert space
+    \item \texttt{nrho} / \texttt{nscalar}: \# density matrices / scalars \emph{per node}
+    \item \texttt{ti}: initial time, defaults to zero
+  \end{itemize}
+  \textbf{Call them in your own constructor with the system parameters you need!}
+\end{frame}
+
+\begin{frame}{SQuIDS - Member variables}
+  SQuIDS is set up to include the following member variables:
+  \begin{itemize}
+    \item \texttt{std::vector<double> x}: \(x\) range
+    \item \texttt{uint nsun}: Dim. of Hilbertspace
+    \item \texttt{Const params}: \texttt{squids::Const} object containing system parameters
+    \item And many more!
+  \end{itemize}
+  You can (and should) access these from within your own member functions!
+\end{frame}
+
+\begin{frame}{SQuIDS - Handy functions}
+  Some very useful predefined member functions are:
+  {\small\begin{tcolorbox}[colback=gray!5!white]
+    \uncover<1->{\texttt{int Set\_xrange(double xini, double xend, std::string scale); \textcolor{olive}{\textbackslash\textbackslash {} Sets x = \{xini, \ldots, xend\} with lin or log scale}}} \\
+    \uncover<2->{\texttt{double Get\_x(uint i) const; \textcolor{olive}{\textbackslash\textbackslash {} Returns x[i]}}} \\
+    \uncover<3->{\texttt{const * Const Get\_params() const; \textcolor{olive}{\textbackslash\textbackslash {} Returns Const member}}} \\
+    \uncover<4->{\texttt{int Evolve(double dt); \textcolor{olive}{\textbackslash\textbackslash {} Evolves System by dt}}} \\
+    \uncover<5->{\texttt{double GetExpectationValue(SU\_vector op, uint irho, uint ix) const; \textcolor{olive}{\textbackslash\textbackslash {} Calculates exp. val. of op at node ix with density matrix irho at current time}}}
+  \end{tcolorbox}}
+  \uncover<6->{Of course there are more but these are most important for us!}
+\end{frame}
+
+\begin{frame}{SQuIDS - Evolution functions}
+  Last but not least: The time independent Hamiltonian \texttt{H0}
+  \begin{tcolorbox}[colback=gray!5!white]
+  \texttt{SU\_vector H0(double x, uint irho) const;}
+  \end{tcolorbox}
+  \begin{itemize}
+    \item Returns \(\hat{H}_0\) as \texttt{SU\_vector} object
+    \item Assumes that \(\hat{H}_0\) diagonal (i.e. given in mass basis \texttt{B0} for \(\nu\) oscillations)
+    \item Cannot modify but can read member variables (const)
+    \item \texttt{irho}: \texttt{H0} for density matrix at node \(x_i\)
+  \end{itemize}
 \end{frame}
 
 \subsection{SQuIDS - SQuIDS: Exercise}
@@ -495,11 +578,21 @@
 \end{frame}
 
 \begin{frame}{SQuIDS application: Neutrino oscillations in vacuum}
+  General set up: Vacuum Oscillations Experiment with \ldots
+  \begin{itemize}
+    \item Fixed baseline \(L\) (\(\hat{=}\) time variable)
+    \item \texttt{n} logarithmic energy bins: \(E \in [10\,\mathrm{MeV}, 10\,\mathrm{GeV}]\)
+    \item All neutrinos are produced as electron neutrinos
+  \end{itemize}
+  Use: \texttt{x} nodes as energy nodes, one density matrix per node, no scalar functions, only \texttt{H0} non-zero
+\end{frame}
+
+\begin{frame}{SQuIDS application: Neutrino oscillations in vacuum}
   \begin{enumerate}
     \item Declare vacuum class publically derived from squids::SQuIDS class in \texttt{vac/src/vacuum.hpp} with methods
     \begin{itemize}
       \item Default constructor
-      \item Initializing constructor + \texttt{init} function
+      \item Initializing constructor
       \item \texttt{H0}
       \item \texttt{GetProbabilities}
       \item Destructor if needed
@@ -510,6 +603,7 @@
       \item One density function per node, no scalar functions
       \item \texttt{nflavor} neutrino flavors
       \item Initial condition \(\varrho_i(t = 0) = \mathbb{P}_{e}\) for all \(i \in \{1, \ldots,\texttt{nbins}\}\)
+      \item Work in mass basis!!!
     \end{itemize}
   \end{enumerate}
 \end{frame}
