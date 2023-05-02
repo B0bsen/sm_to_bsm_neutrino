@@ -621,7 +621,15 @@
 \begin{frame}{Outlook}
   \begin{itemize}
     \item So far we only scratched the surface of SQuIDS' abilities
-    \item Including \(\hat{H}_1(t), \Gamma, F \neq 0\) opens up possibilities to solve a vast range of systems
+    \item Setting \(\hat{H}_1(t, \varrho), \Gamma(t, \varrho), F(t, \varrho) \neq 0\) opens up possibilities to include decoherence, interactions, etc.
+    \item These extra terms are solved numerically (using \texttt{GSL})
+    \item Examples for neutrinos:
+    \begin{itemize}
+      \item Wave packet decoherence 
+      \item Neutrino propagation through the sun / earth 
+      \item Collective neutrino oscillations (early universe, supernovae, ...)
+      \item Active sterile oscillations by using more than three generations
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
