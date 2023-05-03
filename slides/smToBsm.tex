@@ -142,7 +142,7 @@
   \end{itemize}
   Time evolution of closed quantum system: Schrödinger equation
   \begin{align}
-    i \frac{\partial}{\partial t} \vert \psi \rangle &= \hat{H} \vert \psi \rangle \qquad (\hbar = 1)
+    i \frac{\mathrm{d}}{\mathrm{d} t} \vert \psi \rangle &= \hat{H} \vert \psi \rangle \qquad (\hbar = 1)
   \end{align} 
 \end{frame}
 
@@ -180,13 +180,13 @@
 \begin{frame}{Time evolution of the density matrix}
   Master equation(s): (multiple density matrices possible)
   \begin{align*}
-    \frac{\mathrm{d}\varrho_j}{\mathrm{d}t} &= -i [\hat{H}_j(t), \varrho_j(t)] + \{\Gamma_j(t), \varrho_j(t)\} + F_j[\{\varrho_k\}_k, t]
+    \frac{\mathrm{d}\varrho_j}{\mathrm{d}t} &= -i [\hat{H}_j(t), \varrho_j(t)] \uncover<2->{+ \{\Gamma_j(t), \varrho_j(t)\}} \uncover<3->{+ F_j[\{\varrho_k\}_k, t]}
   \end{align*}
   \begin{itemize}
-    \item Why multiple \(\varrho_j\)? E.g.: One per energy bin!
-    \item \(\hat{H} = \hat{H}_0 + \hat{H}_1(t)\): Unitary evolution
-    \item \(\Gamma\): Decoherence
-    \item \(F\): Other non-linear effects (coupling between \(\varrho_j\))
+    \item<1-> Why multiple \(\varrho_j\)? E.g.: One per energy bin!
+    \item<1-> \(\hat{H} = \hat{H}_0 + \hat{H}_1(t)\): Unitary evolution
+    \item<2-> \(\Gamma\): Decoherence, Attenuation
+    \item<3-> \(F\): Other non-linear effects (coupling between \(\varrho_j\))
   \end{itemize}
 \end{frame}
 
@@ -200,10 +200,11 @@
         \item \(\hat{H}^j = \hat{H}_0^j = E_j \cdot \mathbb{I} + \frac{1}{2E_j} \mathbb{M}^2\)
         \item \(\Gamma \equiv 0\)
         \item \(F \equiv 0\)
-        \item \(\varrho_j(t) = \sum_{\alpha = e}^{\tau} \phi_{\alpha}^j(t) \vert \nu_\alpha \rangle \langle \nu_\alpha \vert\)
+        \item \(\varrho_j(t) = \sum_{\alpha, \beta = e}^{\tau} \phi_{\alpha\beta}^j(t) \vert \nu_\alpha \rangle \langle \nu_\beta \vert\)
       \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
+      \uncover<2->{
       \begin{align*}
         \mathbb{M} &= \sum_{j, k = 1}^{3} (\mathbb{M}_{0})_{jk} \vert \nu_j \rangle \langle \nu_k \vert \\
         &= \sum_{\alpha, \beta = e}^{\tau} (\mathbb{M}_{1})_{\alpha\beta} \vert \nu_\alpha \rangle \langle \nu_\beta \vert \\
@@ -213,7 +214,7 @@
           0 & 0 & m_3
         \end{pmatrix} \\
         \mathbb{M}_{1} &= U_{\mathrm{PMNS}}^\dagger \mathbb{M}_{0} U_{\mathrm{PMNS}}
-      \end{align*}
+      \end{align*}}
     \end{column}
   \end{columns}
 \end{frame}
@@ -227,26 +228,24 @@
   \begin{itemize}
     \item Consider in mass basis: \(\hat{H}_0^j\) is diagonal
     \item Depends only on commutator!
-    \begin{itemize}
-      \item \([A, \mathbb{I}] = 0\) \(\Rightarrow\) \([\hat{H}_0^j, \varrho_j(t)] = [\hat{H}_0^j - \epsilon_j \mathbb{I}, \varrho_j(t)]\)
-      \item \(\epsilon_j := E_j + \sfrac{m_1^2}{2 E_j}\)
-    \end{itemize}
+    \begin{align*}
+      [A, \mathbb{I}] &= 0 \quad \Rightarrow \quad [\hat{H}_0^j, \varrho_j(t)] = [\hat{H}_0^j - \epsilon_j \mathbb{I}, \varrho_j(t)] \\
+      \uncover<2->{\epsilon_j :&= \langle \nu_1 \vert \hat{H}_0^{j} \vert \nu_1 \rangle = E_j + \frac{m_1^2}{2 E_j} \quad \text{(Ground state energy)} \\}
+      \uncover<3->{\Rightarrow  \tilde{H}^j &= \frac{1}{2E_j}\begin{pmatrix}
+        0 & 0 & 0 \\
+        0 & \Delta m_{21}^2 & 0 \\
+        0 & 0 & \Delta m_{31}^2 
+      \end{pmatrix}}
+    \end{align*}
   \end{itemize}
-  \begin{align*}
-    \tilde{H}^j &= \frac{1}{2E_j}\begin{pmatrix}
-      0 & 0 & 0 \\
-      0 & \Delta m_{21}^2 & 0 \\
-      0 & 0 & \Delta m_{31}^2 
-    \end{pmatrix}
-  \end{align*}
 \end{frame}
 
 \begin{frame}{Some Important Considerations (ctd.)}
   Can solve \(H_0\) evolution analytically!
   \begin{itemize}
-    \item Pass to interaction picture:
+    \item Switch to interaction picture:
     \begin{align*}
-      \tilde{\varrho}(t) &:= \exp(i H_0 t) \varrho \exp(-i H_0 t) \\
+      \tilde{\varrho}(t) :&= \exp(i H_0 t) \varrho \exp(-i H_0 t) \\
       \Rightarrow \dot{\varrho} &= - i [H_0, \rho] + \exp(-i H_0 t) \dot{\tilde{\varrho}} \exp(i H_0 t)
     \end{align*}
     \item Can subtract \(-i[H_0, \varrho]\) on both sides of master equation
