@@ -32,6 +32,8 @@ int main(){
 	for (int i = 0; i < dim; i++)
 		DM2 +=dm2[i] * proj0[i];
 	
+	delete[] proj1;
+	delete[] proj0;
 
 	return 0;
 }
